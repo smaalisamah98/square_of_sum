@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>مختبر المتطابقة الشهيرة: مربع مجموع (a + b)² - السنة الرابعة متوسط</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 13.5px; }
+    html, body { height: 100dvh; max-height: 100dvh; overflow: hidden; margin: 0; padding: 0; background-color: #f8fafc; color: #0f172a; }
+    .math-ltr { direction: ltr; unicode-bidi: isolate; font-variant-numeric: lining-nums; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 700; }
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .animate-pop { animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    .animate-shake { animation: shake 0.25s ease-in-out; }
+    @media print {
+      html, body { height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
+      .no-print { display: none !important; }
+      .card-shadow { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+    }
+  </style>
+</head>
+<body class="h-[100dvh] w-full flex flex-col overflow-hidden bg-slate-50">
+
+  <header id="hud-bar" class="hidden no-print shrink-0 bg-white border-b border-slate-200 shadow-sm z-40">
+    <div class="max-w-4xl mx-auto px-3 py-1.5 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <button onclick="confirmExitToMenu()" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+          <span>🏠</span><span class="hidden sm:inline">الرئيسية</span>
+        </button>
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🎓</span>
+          <div>
+            <p id="hud-student-name" class="font-bold text-slate-800 text-xs leading-tight">تلميذ مجتهد</p>
+            <p id="hud-unit-label" class="text-[11px] font-semibold text-indigo-600">الوحدة 1</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 max-w-[140px] sm:max-w-xs mx-1">
+        <div class="flex justify-between text-[11px] font-bold text-slate-500 mb-0.5">
+          <span id="hud-progress-text">1 / 6</span>
+          <span id="hud-percent-text">0%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+          <div id="hud-progress-bar" class="h-full bg-gradient-to-l from-indigo-600 to-blue-500 transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+          <span class="text-xs">⭐</span><span id="hud-score" class="font-black text-amber-700 text-xs">0</span>
+        </div>
+        <div class="flex items-center gap-1 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg">
+          <span class="text-xs">🔥</span><span id="hud-streak" class="font-black text-rose-600 text-xs">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 min-h-0 max-w-4xl w-full mx-auto px-3 py-2 flex flex-col justify-between overflow-hidden">
+    <section id="screen-welcome" class="h-full flex flex-col justify-center animate-pop">
+      <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-5 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500"></div>
+        <div class="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-0.5 rounded-full text-xs font-bold mb-2 border border-indigo-100">
+          <span>📐</span><span>السنة الرابعة متوسط • الرياضيات (الحساب الحرفي)</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-slate-900 mb-1 leading-tight">
+          تطبيق التثبيت والتقويم: <span class="text-indigo-600">مربع مجموع</span>
+        </h1>
+        <div class="my-2 inline-block bg-slate-900 text-white px-4 py-1.5 rounded-xl shadow-sm">
+          <span class="math-ltr text-base sm:text-lg tracking-wide text-amber-300">(a + b)² = a² + 2ab + b²</span>
+        </div>
+        <p class="text-slate-600 text-xs max-w-xl mx-auto mb-3 leading-relaxed">
+          درّب نفسك على النشر السريع، الحساب الذهني، وتجنب الأخطاء الشائعة للحصول على بطاقة تقويمك من 20.
+        </p>
+        <div class="max-w-md mx-auto mb-3 text-right grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div class="sm:col-span-2">
+            <label for="student-name-input" class="block text-xs font-bold text-slate-700 mb-1">الاسم واللقب:</label>
+            <input type="text" id="student-name-input" placeholder="مثال: أمين بن علي" class="w-full px-3 py-1.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold text-slate-800 text-xs transition" />
+          </div>
+          <div>
+            <label for="student-class-input" class="block text-xs font-bold text-slate-700 mb-1">القسم / الفوج:</label>
+            <input type="text" id="student-class-input" placeholder="مثال: 4 م 2" class="w-full px-3 py-1.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold text-slate-800 text-xs transition" />
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-right mb-3">
+          <button onclick="startUnit(1)" class="group bg-blue-50/70 hover:bg-blue-600 border border-blue-200 hover:border-blue-600 p-2.5 rounded-xl transition-all duration-200 flex flex-col justify-between text-right">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-base bg-white p-1 rounded-lg shadow-xs">🧩</span>
+                <span id="badge-u1" class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 group-hover:bg-blue-500 group-hover:text-white">6 تحديات</span>
+              </div>
+              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 group-hover:text-white">1. بناء النشر</h3>
+              <p class="text-[11px] text-slate-600 group-hover:text-blue-100 hidden sm:block mt-0.5">تركيب الحدود الثلاثة</p>
+            </div>
+            <span class="text-[11px] font-bold text-blue-700 group-hover:text-white mt-1.5">ابدأ ←</span>
+          </button>
+          <button onclick="startUnit(2)" class="group bg-emerald-50/70 hover:bg-emerald-600 border border-emerald-200 hover:border-emerald-600 p-2.5 rounded-xl transition-all duration-200 flex flex-col justify-between text-right">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-base bg-white p-1 rounded-lg shadow-xs">⚡</span>
+                <span id="badge-u2" class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 group-hover:bg-emerald-500 group-hover:text-white">5 تحديات</span>
+              </div>
+              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 group-hover:text-white">2. الحساب الذهني</h3>
+              <p class="text-[11px] text-slate-600 group-hover:text-emerald-100 hidden sm:block mt-0.5">حساب مربعات الأعداد</p>
+            </div>
+            <span class="text-[11px] font-bold text-emerald-700 group-hover:text-white mt-1.5">ابدأ ←</span>
+          </button>
+          <button onclick="startUnit(3)" class="group bg-indigo-50/70 hover:bg-indigo-600 border border-indigo-200 hover:border-indigo-600 p-2.5 rounded-xl transition-all duration-200 flex flex-col justify-between text-right">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-base bg-white p-1 rounded-lg shadow-xs">🏆</span>
+                <span id="badge-u3" class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 group-hover:bg-indigo-500 group-hover:text-white">10 أسئلة</span>
+              </div>
+              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 group-hover:text-white">3. التقويم الشامل</h3>
+              <p class="text-[11px] text-slate-600 group-hover:text-indigo-100 hidden sm:block mt-0.5">اختبار العلامة من 20</p>
+            </div>
+            <span class="text-[11px] font-bold text-indigo-700 group-hover:text-white mt-1.5">ابدأ ←</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button onclick="startFullJourney()" class="bg-slate-900 hover:bg-indigo-700 text-white font-extrabold px-5 py-2 rounded-xl shadow transition flex items-center gap-1.5 text-xs sm:text-sm">
+            <span>🚀</span><span>ابدأ المسار الكامل (من التثبيت إلى التقويم)</span>
+          </button>
+          <button onclick="showReportCard()" id="btn-view-report-home" class="hidden bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl transition text-xs">
+            📊 عرض بطاقة النتائج
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-unit1" class="hidden h-full flex flex-col justify-between animate-pop overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-3 sm:p-4 h-full flex flex-col justify-between overflow-hidden">
+        <div class="bg-slate-900 text-white rounded-xl p-2.5 sm:p-3.5 text-center shrink-0">
+          <div class="flex items-center justify-between text-xs sm:text-sm text-blue-300 font-bold mb-1.5">
+            <span>🧩 انشر العبارة بالضغط على الحدود بالترتيب</span>
+            <span id="u1-level-tag" class="bg-blue-500/20 border border-blue-400/30 px-2.5 py-0.5 rounded-full text-xs">مستوى 1</span>
+          </div>
+          <div class="math-ltr flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-lg sm:text-2xl my-1">
+            <span id="u1-expression" class="text-amber-300 tracking-wide">(x + 3)²</span>
+            <span class="text-slate-400">=</span>
+            <button onclick="clearU1Slot(0)" id="u1-slot-0" class="min-w-[78px] sm:min-w-[96px] h-10 sm:h-12 px-2.5 rounded-lg border-2 border-dashed border-blue-400 bg-blue-950/60 flex items-center justify-center text-base sm:text-xl text-blue-200 hover:border-amber-300 transition"><span class="text-xs sm:text-sm font-normal opacity-80">a²</span></button>
+            <span class="text-slate-300 font-black">+</span>
+            <button onclick="clearU1Slot(1)" id="u1-slot-1" class="min-w-[86px] sm:min-w-[106px] h-10 sm:h-12 px-2.5 rounded-lg border-2 border-dashed border-emerald-400 bg-emerald-950/60 flex items-center justify-center text-base sm:text-xl text-emerald-200 hover:border-amber-300 transition"><span class="text-xs sm:text-sm font-normal opacity-80">2ab</span></button>
+            <span class="text-slate-300 font-black">+</span>
+            <button onclick="clearU1Slot(2)" id="u1-slot-2" class="min-w-[78px] sm:min-w-[96px] h-10 sm:h-12 px-2.5 rounded-lg border-2 border-dashed border-purple-400 bg-purple-950/60 flex items-center justify-center text-base sm:text-xl text-purple-200 hover:border-amber-300 transition"><span class="text-xs sm:text-sm font-normal opacity-80">b²</span></button>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center my-2 min-h-0">
+          <div id="u1-options-bank" class="grid grid-cols-3 gap-2 sm:gap-2.5 max-w-xl mx-auto w-full"></div>
+        </div>
+        <div class="shrink-0">
+          <div id="u1-feedback" class="hidden rounded-xl p-2.5 mb-2 border text-right text-sm sm:text-base leading-snug"></div>
+          <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+            <button onclick="resetU1Current()" class="text-slate-500 hover:text-slate-800 font-bold text-sm px-3 py-2 rounded-lg hover:bg-slate-100 transition">🔄 إفراغ</button>
+            <div class="flex items-center gap-2">
+              <button id="u1-check-btn" onclick="checkU1Answer()" class="bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-extrabold px-5 py-2 rounded-xl shadow transition text-sm sm:text-base">تحقق ✓</button>
+              <button id="u1-next-btn" onclick="nextU1Question()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2 rounded-xl shadow transition text-sm sm:text-base">التالي ←</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-unit2" class="hidden h-full flex flex-col justify-between animate-pop overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-3 sm:p-4 h-full flex flex-col justify-between overflow-hidden">
+        <div class="bg-slate-900 text-white rounded-xl p-3 sm:p-4 text-center shrink-0">
+          <div class="flex items-center justify-between text-xs sm:text-sm text-emerald-300 font-bold mb-1.5">
+            <span>⚡ احسب ذهنياً باستعمال المتطابقة</span>
+            <span id="u2-step-badge" class="bg-emerald-500/20 border border-emerald-400/30 px-2.5 py-0.5 rounded-full text-xs">الخطوة 1 / 3</span>
+          </div>
+          <div class="math-ltr flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-lg sm:text-2xl my-1">
+            <span id="u2-target-number" class="text-amber-300">103²</span>
+            <span class="text-slate-400">=</span>
+            <span id="u2-formula-step1" class="text-emerald-300 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">( ? + ? )²</span>
+            <span class="text-slate-400">=</span>
+            <span id="u2-formula-step2" class="text-blue-300 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">? + ? + ?</span>
+            <span class="text-slate-400">=</span>
+            <span id="u2-formula-step3" class="text-white bg-indigo-900/70 px-3 py-1 rounded-lg border border-indigo-500/50">?</span>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center my-2 min-h-0">
+          <p id="u2-prompt-label" class="text-center font-extrabold text-slate-800 text-sm sm:text-base mb-2.5">1. اختر التفكيك الأنسب للعدد:</p>
+          <div id="u2-choices-container" class="grid grid-cols-3 gap-2.5 max-w-xl mx-auto w-full"></div>
+        </div>
+        <div class="shrink-0">
+          <div id="u2-feedback" class="hidden rounded-xl p-2.5 mb-2 border text-right text-sm sm:text-base leading-snug"></div>
+          <div class="flex justify-end pt-2 border-t border-slate-100">
+            <button id="u2-next-btn" onclick="nextU2Question()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2 rounded-xl shadow transition text-sm sm:text-base">العدد التالي ←</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-unit3" class="hidden h-full flex flex-col justify-between animate-pop overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-3 sm:p-4 h-full flex flex-col justify-between overflow-hidden">
+        <div class="bg-slate-900 text-white rounded-xl p-3 sm:p-4 shrink-0">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span id="u3-q-type" class="bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-xs sm:text-sm font-extrabold px-2.5 py-0.5 rounded-full">نشر وتبسيط</span>
+            <span id="u3-q-number" class="text-xs sm:text-sm font-bold text-slate-300">السؤال 1 من 10</span>
+          </div>
+          <h2 id="u3-q-text" class="text-sm sm:text-base font-bold text-slate-100 mb-2 leading-snug">اختر النشر الصحيح للعبارة التالية:</h2>
+          <div class="bg-slate-800/90 border border-slate-700 rounded-xl py-2 px-3 flex flex-wrap items-center justify-center gap-2.5 math-ltr text-lg sm:text-2xl">
+            <span id="u3-q-math" class="text-amber-300 tracking-wide">(2x + 5)²</span>
+            <span id="u3-q-answer-slot" class="hidden text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-0.5 rounded-lg text-base sm:text-xl"></span>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col justify-center my-2 min-h-0">
+          <div id="u3-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+        </div>
+        <div class="shrink-0">
+          <div id="u3-feedback" class="hidden rounded-xl p-2.5 mb-2 border text-right text-sm sm:text-base leading-snug"></div>
+          <div class="flex justify-end pt-2 border-t border-slate-100">
+            <button id="u3-next-btn" onclick="nextU3Question()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-5 py-2 rounded-xl shadow transition text-sm sm:text-base">السؤال التالي ←</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-report" class="hidden h-full flex flex-col justify-between animate-pop overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-3 sm:p-4 card-shadow h-full flex flex-col justify-between overflow-y-auto custom-scroll">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2 gap-2 shrink-0">
+          <div>
+            <span class="inline-block bg-indigo-50 text-indigo-700 text-[11px] font-extrabold px-2 py-0.5 rounded-full mb-0.5">بطاقة تقويم الكفاءة • 4 متوسط</span>
+            <h2 class="text-base sm:text-lg font-black text-slate-900">التلميذ(ة): <span id="rep-name" class="text-indigo-600">---</span> <span id="rep-class-badge" class="text-xs font-bold text-slate-500"></span></h2>
+          </div>
+          <div class="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-xl">
+            <div class="text-right">
+              <p class="text-[10px] text-slate-400 font-bold">العلامة</p>
+              <p class="text-lg sm:text-xl font-black text-amber-400 leading-none"><span id="rep-grade">0</span><span class="text-xs text-slate-400">/20</span></p>
+            </div>
+            <div class="h-6 w-px bg-slate-700"></div>
+            <div class="text-right">
+              <p class="text-[10px] text-slate-400 font-bold">النقاط</p>
+              <p id="rep-points" class="text-sm font-black text-emerald-400 leading-none">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 my-2 shrink-0">
+          <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-2 text-center">
+            <p class="text-[11px] font-bold text-blue-800">🧩 بناء النشر</p>
+            <p id="rep-u1-score" class="text-sm sm:text-base font-black text-blue-900">0 / 6</p>
+          </div>
+          <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-2 text-center">
+            <p class="text-[11px] font-bold text-emerald-800">⚡ الحساب الذهني</p>
+            <p id="rep-u2-score" class="text-sm sm:text-base font-black text-emerald-900">0 / 5</p>
+          </div>
+          <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-2 text-center">
+            <p class="text-[11px] font-bold text-indigo-800">🏆 التقويم الشامل</p>
+            <p id="rep-u3-score" class="text-sm sm:text-base font-black text-indigo-900">0 / 10</p>
+          </div>
+        </div>
+        <div id="rep-diagnosis-box" class="rounded-xl p-2.5 border my-1 flex-1 flex flex-col justify-center">
+          <h3 id="rep-diagnosis-title" class="font-black text-xs sm:text-sm mb-1 flex items-center gap-1.5"></h3>
+          <p id="rep-diagnosis-text" class="text-xs leading-relaxed mb-1.5"></p>
+          <div id="rep-error-breakdown" class="space-y-1 text-xs"></div>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-slate-100 no-print shrink-0">
+          <button onclick="openSendToTeacherModal()" class="bg-gradient-to-l from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 text-xs sm:text-sm">
+            <span>📤</span><span>إرسال النتيجة إلى الأستاذة سماعلي</span>
+          </button>
+          <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1 text-xs">
+            <span>🖨️</span><span>طباعة / PDF</span>
+          </button>
+          <button onclick="restartAll()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1 text-xs">
+            <span>🔄</span><span>إعادة</span>
+          </button>
+          <button onclick="goHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-xl transition text-xs">🏠 الرئيسية</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="send-teacher-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-md w-full p-4 animate-pop">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl bg-indigo-50 p-1.5 rounded-xl">👩‍🏫</span>
+          <div>
+            <h3 class="font-black text-slate-900 text-sm sm:text-base">إرسال النتيجة إلى الأستاذة سماعلي</h3>
+            <p class="text-[11px] text-slate-500">اختر وسيلة الإرسال المناسبة لتسليم بطاقة تقويمك</p>
+          </div>
+        </div>
+        <button onclick="closeSendToTeacherModal()" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center">✕</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-2.5">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-0.5">اسم التلميذ(ة):</label>
+          <input type="text" id="modal-student-name" oninput="updateReportPreview()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:border-indigo-500 outline-none font-bold text-xs text-slate-800" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-0.5">القسم / الفوج:</label>
+          <input type="text" id="modal-student-class" placeholder="مثال: 4 م 2" oninput="updateReportPreview()" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 focus:border-indigo-500 outline-none font-bold text-xs text-slate-800" />
+        </div>
+      </div>
+      <div class="mb-2.5">
+        <label class="block text-[11px] font-bold text-slate-700 mb-1">معاينة التقرير المرسل:</label>
+        <textarea id="modal-report-preview" readonly rows="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium leading-relaxed resize-none focus:outline-none"></textarea>
+      </div>
+      <details class="mb-3 bg-slate-50 border border-slate-200 rounded-xl p-2">
+        <summary class="text-[11px] font-bold text-slate-600 cursor-pointer select-none">⚙️ تخصيص رقم واتساب أو بريد الأستاذة (اختياري)</summary>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-0.5">رقم واتساب الأستاذة:</label>
+            <input type="tel" id="teacher-whatsapp-input" placeholder="2135XXXXXXXX" oninput="saveTeacherContact()" class="w-full px-2 py-1 rounded border border-slate-300 text-xs math-ltr" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-0.5">البريد الإلكتروني للأستاذة:</label>
+            <input type="email" id="teacher-email-input" placeholder="prof.smaali@gmail.com" oninput="saveTeacherContact()" class="w-full px-2 py-1 rounded border border-slate-300 text-xs math-ltr" />
+          </div>
+        </div>
+      </details>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <button onclick="sendViaWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2 px-3 rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-xs"><span>💬</span><span>عبر واتساب</span></button>
+        <button onclick="sendViaEmail()" class="bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2 px-3 rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-xs"><span>✉️</span><span>بريد إلكتروني</span></button>
+        <button onclick="copyReportFromModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-2 px-3 rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-xs"><span>📋</span><span>نسخ التقرير</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-xl shadow-xl font-bold text-xs hidden z-50 transition-all"></div>
+
+  <script>
+    const state = {
+      studentName: '', studentClass: '', teacherWhatsApp: '', teacherEmail: '', fullJourney: false, currentUnit: 0,
+      score: 0, streak: 0, u1Index: 0, u1CorrectCount: 0, u1Slots: [null, null, null], u1Answered: false,
+      u2Index: 0, u2Step: 1, u2CorrectCount: 0, u2CurrentMistake: false, u3Index: 0, u3CorrectCount: 0, u3Answered: false,
+      errors: { forgotCoeffSquare: 0, forgotDoubleProduct: 0, forgotMiddleTerm: 0, mentalCalcError: 0 }
+    };
+    const unit1Data = [
+      { level: "مستوى 1", expr: "(x + 3)²", correct: ["x²", "6x", "9"], distractors: ["3x", "6", "x"], hints: { "3x": "نسيت الضرب في 2 في الحد الأوسط: 2 × x × 3 = 6x.", "6": "الحد الثاني مربع: 3² = 9 وليس 3 × 2." } },
+      { level: "مستوى 1", expr: "(5 + y)²", correct: ["25", "10y", "y²"], distractors: ["10", "5y", "2y"], hints: { "10": "5² = 25 وليس 10.", "5y": "ضعف الجداء يساوي 2 × 5 × y = 10y." } },
+      { level: "مستوى 2", expr: "(2x + 1)²", correct: ["4x²", "4x", "1"], distractors: ["2x²", "2x", "2"], hints: { "2x²": "يجب تربيع المعامل 2 أيضاً: (2x)² = 4x².", "2x": "الحد الأوسط هو 2 × 2x × 1 = 4x." } },
+      { level: "مستوى 2", expr: "(3x + 4)²", correct: ["9x²", "24x", "16"], distractors: ["3x²", "12x", "8"], hints: { "3x²": "(3x)² = 9x² وليس 3x².", "12x": "ضعف الجداء هو 2 × 3x × 4 = 24x." } },
+      { level: "مستوى 3", expr: "(4x + 5)²", correct: ["16x²", "40x", "25"], distractors: ["4x²", "20x", "10"], hints: { "4x²": "انتبه لتربيع المعامل 4: (4x)² = 16x².", "20x": "2 × 4x × 5 = 40x." } },
+      { level: "مستوى 3", expr: "(2x + 3y)²", correct: ["4x²", "12xy", "9y²"], distractors: ["2x²", "6xy", "3y²"], hints: { "2x²": "(2x)² = 4x².", "6xy": "2 × 2x × 3y = 12xy.", "3y²": "(3y)² = 9y²." } }
+    ];
+    const unit2Data = [
+      { target: "102²", s1Options: ["(100 + 2)²", "(10 + 2)²", "(100 + 20)²"], s1Correct: "(100 + 2)²", s2Options: ["10000 + 400 + 4", "10000 + 200 + 4", "1000 + 400 + 4"], s2Correct: "10000 + 400 + 4", s3Options: ["10404", "10204", "10004"], s3Correct: "10404" },
+      { target: "51²", s1Options: ["(50 + 1)²", "(5 + 1)²", "(40 + 11)²"], s1Correct: "(50 + 1)²", s2Options: ["2500 + 100 + 1", "2500 + 50 + 1", "250 + 100 + 1"], s2Correct: "2500 + 100 + 1", s3Options: ["2601", "2551", "2501"], s3Correct: "2601" },
+      { target: "105²", s1Options: ["(100 + 5)²", "(10 + 5)²", "(90 + 15)²"], s1Correct: "(100 + 5)²", s2Options: ["10000 + 1000 + 25", "10000 + 500 + 25", "10000 + 1000 + 10"], s2Correct: "10000 + 1000 + 25", s3Options: ["11025", "10525", "10025"], s3Correct: "11025" },
+      { target: "32²", s1Options: ["(30 + 2)²", "(3 + 2)²", "(20 + 12)²"], s1Correct: "(30 + 2)²", s2Options: ["900 + 120 + 4", "900 + 60 + 4", "600 + 120 + 4"], s2Correct: "900 + 120 + 4", s3Options: ["1024", "964", "904"], s3Correct: "1024" },
+      { target: "203²", s1Options: ["(200 + 3)²", "(20 + 3)²", "(200 + 30)²"], s1Correct: "(200 + 3)²", s2Options: ["40000 + 1200 + 9", "40000 + 600 + 9", "4000 + 1200 + 9"], s2Correct: "40000 + 1200 + 9", s3Options: ["41209", "40609", "40009"], s3Correct: "41209" }
+    ];
+    const unit3Data = [
+      { type: "نشر وتبسيط", text: "اختر النشر الصحيح للعبارة:", math: "(x + 6)²", options: ["x² + 12x + 36", "x² + 36", "x² + 6x + 36", "2x + 12"], correct: 0, errorTags: [null, "forgotMiddleTerm", "forgotDoubleProduct", "forgotCoeffSquare"], explanation: "(x + 6)² = x² + 2(x)(6) + 6² = x² + 12x + 36." },
+      { type: "نشر وتبسيط", text: "ما هو نشر العبارة التالية؟", math: "(3x + 2)²", options: ["3x² + 12x + 4", "9x² + 6x + 4", "9x² + 12x + 4", "9x² + 4"], correct: 2, errorTags: ["forgotCoeffSquare", "forgotDoubleProduct", null, "forgotMiddleTerm"], explanation: "(3x)² = 9x²، وضعف الجداء 2 × 3x × 2 = 12x، ومربع الثاني 4." },
+      { type: "إكمال الفراغ", text: "أوجد الحد الأوسط الناقص:", math: "(4x + 3)² = 16x² + [ ? ] + 9", options: ["12x", "24x", "7x", "24"], correct: 1, errorTags: ["forgotDoubleProduct", null, "forgotDoubleProduct", "forgotDoubleProduct"], explanation: "الحد الأوسط هو 2 × 4x × 3 = 24x." },
+      { type: "كشف الخطأ", text: "كتب تلميذ: (5x + 1)² = 5x² + 10x + 1. أين الخطأ؟", math: "(5x + 1)² ≠ 5x² + 10x + 1", options: ["نسيان الضرب في 2", "نسيان تربيع المعامل 5 (الصواب 25x²)", "الحد الأخير يجب أن يكون 2", "العبارة صحيحة"], correct: 1, errorTags: ["forgotDoubleProduct", null, "mentalCalcError", "forgotCoeffSquare"], explanation: "(5x)² = 25x² وليس 5x²." },
+      { type: "نشر وتبسيط", text: "انشر وبسّط العبارة:", math: "(2x + 7)²", options: ["4x² + 28x + 49", "4x² + 14x + 49", "2x² + 28x + 49", "4x² + 49"], correct: 0, errorTags: [null, "forgotDoubleProduct", "forgotCoeffSquare", "forgotMiddleTerm"], explanation: "(2x)² + 2(2x)(7) + 7² = 4x² + 28x + 49." },
+      { type: "إكمال الفراغ", text: "أكمل الحد الأول الناقص:", math: "(6x + 5)² = [ ? ] + 60x + 25", options: ["6x²", "12x²", "36x", "36x²"], correct: 3, errorTags: ["forgotCoeffSquare", "forgotCoeffSquare", "forgotCoeffSquare", null], explanation: "مربع الحد الأول (6x)² = 36x²." },
+      { type: "حساب ذهني", text: "باستعمال المتطابقة، ناتج 41² هو:", math: "41² = (40 + 1)²", options: ["1601", "1641", "1681", "81"], correct: 2, errorTags: ["forgotMiddleTerm", "forgotDoubleProduct", null, "mentalCalcError"], explanation: "40² + 2(40)(1) + 1² = 1600 + 80 + 1 = 1681." },
+      { type: "نشر وتبسيط", text: "ما هو نشر العبارة:", math: "(x + 1/2)²", options: ["x² + x + 1/4", "x² + 1/2x + 1/4", "x² + 1/4", "x² + x + 1"], correct: 0, errorTags: [null, "forgotDoubleProduct", "forgotMiddleTerm", "mentalCalcError"], explanation: "2 × x × (1/2) = x، ومربع (1/2) هو 1/4." },
+      { type: "عكسي (تعرّف)", text: "أي عبارة نشرها يساوي 9x² + 30x + 25؟", math: "9x² + 30x + 25 = ?", options: ["(9x + 5)²", "(3x + 25)²", "(3x + 5)²", "(3x + 15)²"], correct: 2, errorTags: ["forgotCoeffSquare", "mentalCalcError", null, "forgotDoubleProduct"], explanation: "9x² = (3x)² و 25 = 5² و 2 × 3x × 5 = 30x." },
+      { type: "تحدي ختامي", text: "انشر وبسّط العبارة:", math: "(7x + 2)²", options: ["49x² + 14x + 4", "7x² + 28x + 4", "49x² + 4", "49x² + 28x + 4"], correct: 3, errorTags: ["forgotDoubleProduct", "forgotCoeffSquare", "forgotMiddleTerm", null], explanation: "(7x)² + 2(7x)(2) + 2² = 49x² + 28x + 4." }
+    ];
+    function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 2600); }
+    function hideAllScreens() { ['screen-welcome', 'screen-unit1', 'screen-unit2', 'screen-unit3', 'screen-report'].forEach(id => document.getElementById(id).classList.add('hidden')); }
+    function captureStudentInfo() {
+      const nameVal = document.getElementById('student-name-input').value.trim();
+      const classVal = document.getElementById('student-class-input').value.trim();
+      if (nameVal) state.studentName = nameVal;
+      if (!state.studentName) state.studentName = 'تلميذ(ة) السنة الرابعة متوسط';
+      if (classVal) state.studentClass = classVal;
+      document.getElementById('hud-student-name').textContent = state.studentName;
+    }
+    function updateHUD(unitLabel, current, total) {
+      document.getElementById('hud-bar').classList.remove('hidden');
+      document.getElementById('hud-unit-label').textContent = unitLabel;
+      document.getElementById('hud-progress-text').textContent = `${current} / ${total}`;
+      const pct = Math.round(((current - 1) / total) * 100);
+      document.getElementById('hud-percent-text').textContent = `${pct}%`;
+      document.getElementById('hud-progress-bar').style.width = `${pct}%`;
+      document.getElementById('hud-score').textContent = state.score;
+      document.getElementById('hud-streak').textContent = state.streak;
+    }
+    function addPoints(pts) { state.score += pts; state.streak += 1; document.getElementById('hud-score').textContent = state.score; document.getElementById('hud-streak').textContent = state.streak; }
+    function resetStreak() { state.streak = 0; document.getElementById('hud-streak').textContent = 0; }
+    function goHome() {
+      hideAllScreens(); document.getElementById('hud-bar').classList.add('hidden'); document.getElementById('screen-welcome').classList.remove('hidden');
+      if (state.score > 0) document.getElementById('btn-view-report-home').classList.remove('hidden');
+      if (state.u1CorrectCount > 0) document.getElementById('badge-u1').textContent = `أنجزت ${state.u1CorrectCount}/6`;
+      if (state.u2CorrectCount > 0) document.getElementById('badge-u2').textContent = `أنجزت ${state.u2CorrectCount}/5`;
+      if (state.u3CorrectCount > 0) document.getElementById('badge-u3').textContent = `أنجزت ${state.u3CorrectCount}/10`;
+    }
+    function confirmExitToMenu() { goHome(); }
+    function startFullJourney() { captureStudentInfo(); state.fullJourney = true; startUnit(1, true); }
+    function startUnit(unitNum, keepJourney = false) {
+      captureStudentInfo(); if (!keepJourney) state.fullJourney = false; state.currentUnit = unitNum; hideAllScreens();
+      if (unitNum === 1) { state.u1Index = 0; state.u1CorrectCount = 0; document.getElementById('screen-unit1').classList.remove('hidden'); renderUnit1(); }
+      else if (unitNum === 2) { state.u2Index = 0; state.u2CorrectCount = 0; document.getElementById('screen-unit2').classList.remove('hidden'); renderUnit2(); }
+      else if (unitNum === 3) { state.u3Index = 0; state.u3CorrectCount = 0; document.getElementById('screen-unit3').classList.remove('hidden'); renderUnit3(); }
+    }
+    function renderUnit1() {
+      const q = unit1Data[state.u1Index]; updateHUD('الوحدة 1: بناء النشر', state.u1Index + 1, unit1Data.length);
+      state.u1Slots = [null, null, null]; state.u1Answered = false;
+      document.getElementById('u1-level-tag').textContent = q.level; document.getElementById('u1-expression').textContent = q.expr;
+      document.getElementById('u1-feedback').classList.add('hidden'); document.getElementById('u1-check-btn').classList.remove('hidden');
+      document.getElementById('u1-check-btn').disabled = true; document.getElementById('u1-next-btn').classList.add('hidden');
+      updateU1SlotsUI();
+      const bank = document.getElementById('u1-options-bank'); bank.innerHTML = '';
+      shuffle([...q.correct, ...q.distractors]).forEach((term, idx) => {
+        const btn = document.createElement('button'); btn.id = `u1-card-${idx}`;
+        btn.className = 'math-ltr bg-slate-50 hover:bg-blue-50 border-2 border-slate-200 hover:border-blue-400 text-slate-800 text-base sm:text-xl py-2.5 sm:py-3 px-2 rounded-xl shadow-xs transition active:scale-95';
+        btn.textContent = term; btn.onclick = () => selectU1Card(term, btn); bank.appendChild(btn);
+      });
+    }
+    function selectU1Card(term, btnEl) {
+      if (state.u1Answered) return; const emptyIdx = state.u1Slots.findIndex(s => s === null); if (emptyIdx === -1) return;
+      state.u1Slots[emptyIdx] = { term, btnId: btnEl.id }; btnEl.disabled = true; btnEl.classList.add('opacity-30', 'cursor-not-allowed');
+      updateU1SlotsUI(); document.getElementById('u1-check-btn').disabled = state.u1Slots.some(s => s === null);
+    }
+    function clearU1Slot(slotIdx) {
+      if (state.u1Answered) return; const item = state.u1Slots[slotIdx]; if (!item) return;
+      const btn = document.getElementById(item.btnId); if (btn) { btn.disabled = false; btn.classList.remove('opacity-30', 'cursor-not-allowed'); }
+      state.u1Slots[slotIdx] = null; updateU1SlotsUI(); document.getElementById('u1-check-btn').disabled = true;
+    }
+    function resetU1Current() { if (!state.u1Answered) [0, 1, 2].forEach(i => clearU1Slot(i)); }
+    function updateU1SlotsUI() {
+      const defaults = ['a²', '2ab', 'b²'];
+      const colors = ['border-blue-400 bg-blue-950/60 text-blue-200', 'border-emerald-400 bg-emerald-950/60 text-emerald-200', 'border-purple-400 bg-purple-950/60 text-purple-200'];
+      [0, 1, 2].forEach(i => {
+        const slotEl = document.getElementById(`u1-slot-${i}`); const item = state.u1Slots[i];
+        if (item) { slotEl.className = 'min-w-[78px] sm:min-w-[96px] h-10 sm:h-12 px-2.5 rounded-lg border-2 border-amber-300 bg-amber-400/20 flex items-center justify-center text-base sm:text-xl text-white font-black shadow-xs transition'; slotEl.textContent = item.term; }
+        else { slotEl.className = `min-w-[78px] sm:min-w-[96px] h-10 sm:h-12 px-2.5 rounded-lg border-2 border-dashed ${colors[i]} flex items-center justify-center text-base sm:text-xl transition`; slotEl.innerHTML = `<span class="text-xs sm:text-sm font-normal opacity-80">${defaults[i]}</span>`; }
+      });
+    }
+    function checkU1Answer() {
+      if (state.u1Answered) return; state.u1Answered = true;
+      const q = unit1Data[state.u1Index]; const chosen = state.u1Slots.map(s => s.term);
+      const isCorrect = chosen[0] === q.correct[0] && chosen[1] === q.correct[1] && chosen[2] === q.correct[2];
+      const fb = document.getElementById('u1-feedback'); fb.classList.remove('hidden');
+      document.getElementById('u1-check-btn').classList.add('hidden'); document.getElementById('u1-next-btn').classList.remove('hidden');
+      if (isCorrect) {
+        state.u1CorrectCount++; addPoints(15);
+        fb.className = 'rounded-xl p-2.5 mb-2 border bg-emerald-50 border-emerald-200 text-emerald-900 text-sm sm:text-base';
+        fb.innerHTML = `✅ <strong>أحسنت!</strong> النشر الصحيح: <span class="math-ltr font-bold">${q.correct.join(' + ')}</span>`;
+      } else {
+        resetStreak(); let hintMsg = ''; chosen.forEach(c => { if (q.hints[c] && !hintMsg) hintMsg = q.hints[c]; });
+        if (chosen[0].endsWith('x²') && !q.correct[0].startsWith('1') && chosen[0] !== q.correct[0]) state.errors.forgotCoeffSquare++; else state.errors.forgotDoubleProduct++;
+        fb.className = 'rounded-xl p-2.5 mb-2 border bg-rose-50 border-rose-200 text-rose-900 text-sm sm:text-base animate-shake';
+        fb.innerHTML = `❌ <strong>الصواب:</strong> <span class="math-ltr font-bold text-emerald-700">${q.correct.join(' + ')}</span>. ${hintMsg}`;
+      }
+    }
+    function nextU1Question() { state.u1Index++; if (state.u1Index < unit1Data.length) renderUnit1(); else if (state.fullJourney) startUnit(2, true); else showReportCard(); }
+    function renderUnit2() {
+      const q = unit2Data[state.u2Index]; updateHUD('الوحدة 2: الحساب الذهني', state.u2Index + 1, unit2Data.length);
+      state.u2Step = 1; state.u2CurrentMistake = false;
+      document.getElementById('u2-target-number').textContent = q.target; document.getElementById('u2-formula-step1').textContent = '( ? + ? )²';
+      document.getElementById('u2-formula-step2').textContent = '? + ? + ?'; document.getElementById('u2-formula-step3').textContent = '?';
+      document.getElementById('u2-feedback').classList.add('hidden'); document.getElementById('u2-next-btn').classList.add('hidden'); renderUnit2Step();
+    }
+    function renderUnit2Step() {
+      const q = unit2Data[state.u2Index]; const container = document.getElementById('u2-choices-container'); container.innerHTML = '';
+      let options = [], correctVal = '';
+      if (state.u2Step === 1) { document.getElementById('u2-step-badge').textContent = 'الخطوة 1 / 3'; document.getElementById('u2-prompt-label').textContent = '1. اختر التفكيك الأنسب للعدد:'; options = shuffle(q.s1Options); correctVal = q.s1Correct; }
+      else if (state.u2Step === 2) { document.getElementById('u2-step-badge').textContent = 'الخطوة 2 / 3'; document.getElementById('u2-prompt-label').textContent = '2. طبّق النشر a² + 2ab + b²:'; options = shuffle(q.s2Options); correctVal = q.s2Correct; }
+      else { document.getElementById('u2-step-badge').textContent = 'الخطوة 3 / 3'; document.getElementById('u2-prompt-label').textContent = '3. احسب الناتج النهائي ذهنياً:'; options = shuffle(q.s3Options); correctVal = q.s3Correct; }
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'math-ltr bg-slate-50 hover:bg-emerald-50 border-2 border-slate-200 hover:border-emerald-500 text-slate-800 text-sm sm:text-lg py-2.5 sm:py-3 px-2 rounded-xl shadow-xs transition active:scale-95';
+        btn.textContent = opt; btn.onclick = () => handleUnit2Choice(opt, correctVal, btn); container.appendChild(btn);
+      });
+    }
+    function handleUnit2Choice(chosen, correctVal, btnEl) {
+      const q = unit2Data[state.u2Index]; const fb = document.getElementById('u2-feedback');
+      if (chosen === correctVal) {
+        fb.classList.add('hidden');
+        if (state.u2Step === 1) { document.getElementById('u2-formula-step1').textContent = correctVal; state.u2Step = 2; renderUnit2Step(); }
+        else if (state.u2Step === 2) { document.getElementById('u2-formula-step2').textContent = correctVal; state.u2Step = 3; renderUnit2Step(); }
+        else {
+          document.getElementById('u2-formula-step3').textContent = correctVal; document.getElementById('u2-choices-container').innerHTML = '';
+          document.getElementById('u2-prompt-label').textContent = '✨ اكتمل الحساب الذهني بنجاح!'; if (!state.u2CurrentMistake) state.u2CorrectCount++; addPoints(20);
+          fb.className = 'rounded-xl p-2.5 mb-2 border bg-emerald-50 border-emerald-200 text-emerald-900 text-sm sm:text-base';
+          fb.innerHTML = `🎉 <strong>ممتاز!</strong> <span class="math-ltr font-bold">${q.target} = ${q.s3Correct}</span>`; fb.classList.remove('hidden');
+          document.getElementById('u2-next-btn').classList.remove('hidden');
+        }
+      } else {
+        state.u2CurrentMistake = true; state.errors.mentalCalcError++; resetStreak();
+        btnEl.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-700', 'animate-shake');
+        fb.className = 'rounded-xl p-2.5 mb-2 border bg-amber-50 border-amber-200 text-amber-900 text-sm sm:text-base';
+        fb.innerHTML = '⚠️ <strong>تحقق جيداً!</strong> تذكّر حساب ضعف الجداء <span class="math-ltr">2ab</span> بدقة.'; fb.classList.remove('hidden');
+      }
+    }
+    function nextU2Question() { state.u2Index++; if (state.u2Index < unit2Data.length) renderUnit2(); else if (state.fullJourney) startUnit(3, true); else showReportCard(); }
+    function renderUnit3() {
+      const q = unit3Data[state.u3Index]; updateHUD('الوحدة 3: التقويم الشامل', state.u3Index + 1, unit3Data.length); state.u3Answered = false;
+      document.getElementById('u3-q-type').textContent = q.type; document.getElementById('u3-q-number').textContent = `السؤال ${state.u3Index + 1} من ${unit3Data.length}`;
+      document.getElementById('u3-q-text').textContent = q.text; document.getElementById('u3-q-math').textContent = q.math;
+      const ansSlot = document.getElementById('u3-q-answer-slot'); ansSlot.classList.add('hidden'); ansSlot.textContent = '';
+      document.getElementById('u3-feedback').classList.add('hidden'); document.getElementById('u3-next-btn').classList.add('hidden');
+      const optsContainer = document.getElementById('u3-options'); optsContainer.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'text-right bg-slate-50 hover:bg-indigo-50 border-2 border-slate-200 hover:border-indigo-400 p-2.5 sm:p-3 rounded-xl transition flex items-center justify-between gap-2 group';
+        const isMath = /^[0-9x²+\-\s()\/=?≠]+$/.test(opt);
+        btn.innerHTML = `<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-white border border-slate-300 group-hover:border-indigo-500 flex items-center justify-center font-black text-xs sm:text-sm text-slate-600 shrink-0">${['A', 'B', 'C', 'D'][idx]}</span><span class="${isMath ? 'math-ltr text-base sm:text-lg' : 'font-bold text-sm sm:text-base'} text-slate-800 flex-1 text-center">${opt}</span>`;
+        btn.onclick = () => selectU3Option(idx, btn); optsContainer.appendChild(btn);
+      });
+    }
+    function selectU3Option(chosenIdx, btnEl) {
+      if (state.u3Answered) return; state.u3Answered = true;
+      const q = unit3Data[state.u3Index]; const allBtns = document.getElementById('u3-options').querySelectorAll('button'); const fb = document.getElementById('u3-feedback');
+      allBtns.forEach((b, i) => { b.disabled = true; if (i === q.correct) { b.classList.remove('bg-slate-50', 'border-slate-200'); b.classList.add('bg-emerald-50', 'border-emerald-500'); } });
+      const ansSlot = document.getElementById('u3-q-answer-slot'); ansSlot.textContent = `✓ ${q.options[q.correct]}`; ansSlot.classList.remove('hidden');
+      if (chosenIdx === q.correct) {
+        state.u3CorrectCount++; addPoints(20);
+        fb.className = 'rounded-xl p-2.5 mb-2 border bg-emerald-50 border-emerald-200 text-emerald-900 text-sm sm:text-base';
+        fb.innerHTML = `✅ <strong>صحيح!</strong> ${q.explanation}`;
+      } else {
+        resetStreak(); btnEl.classList.remove('bg-slate-50', 'border-slate-200'); btnEl.classList.add('bg-rose-50', 'border-rose-500', 'animate-shake');
+        const errTag = q.errorTags[chosenIdx]; if (errTag && state.errors[errTag] !== undefined) state.errors[errTag]++;
+        fb.className = 'rounded-xl p-2.5 mb-2 border bg-rose-50 border-rose-200 text-rose-900 text-sm sm:text-base';
+        fb.innerHTML = `❌ <strong>خطأ.</strong> ${q.explanation}`;
+      }
+      fb.classList.remove('hidden'); document.getElementById('u3-next-btn').classList.remove('hidden');
+    }
+    function nextU3Question() { state.u3Index++; if (state.u3Index < unit3Data.length) renderUnit3(); else showReportCard(); }
+    function showReportCard() {
+      hideAllScreens(); document.getElementById('hud-bar').classList.add('hidden'); document.getElementById('screen-report').classList.remove('hidden');
+      const totalTasks = unit1Data.length + unit2Data.length + unit3Data.length;
+      const totalCorrect = state.u1CorrectCount + state.u2CorrectCount + state.u3CorrectCount;
+      const grade20 = Math.round((totalCorrect / totalTasks) * 20 * 2) / 2;
+      document.getElementById('rep-name').textContent = state.studentName;
+      document.getElementById('rep-class-badge').textContent = state.studentClass ? `(${state.studentClass})` : '';
+      document.getElementById('rep-grade').textContent = grade20; document.getElementById('rep-points').textContent = state.score;
+      document.getElementById('rep-u1-score').textContent = `${state.u1CorrectCount} / 6`;
+      document.getElementById('rep-u2-score').textContent = `${state.u2CorrectCount} / 5`;
+      document.getElementById('rep-u3-score').textContent = `${state.u3CorrectCount} / 10`;
+      const diagBox = document.getElementById('rep-diagnosis-box'), diagTitle = document.getElementById('rep-diagnosis-title'), diagText = document.getElementById('rep-diagnosis-text'), errList = document.getElementById('rep-error-breakdown');
+      errList.innerHTML = '';
+      if (grade20 >= 16) {
+        diagBox.className = 'rounded-xl p-2.5 border bg-emerald-50/70 border-emerald-200 text-emerald-950 my-1 flex-1 flex flex-col justify-center';
+        diagTitle.innerHTML = '<span>🌟</span> <span>تقدير ممتاز: تحكم تام في الكفاءة</span>';
+        diagText.textContent = 'أظهرت فهماً عميقاً للمتطابقة الشهيرة (a + b)² وطريقة توظيفها في النشر والحساب الذهني.';
+      } else if (grade20 >= 10) {
+        diagBox.className = 'rounded-xl p-2.5 border bg-amber-50/70 border-amber-200 text-amber-950 my-1 flex-1 flex flex-col justify-center';
+        diagTitle.innerHTML = '<span>👍</span> <span>تقدير جيد: تحكم مقبول مع هفوات بسيطة</span>';
+        diagText.textContent = 'المفهوم الأساسي مكتسب، لكن يُنصح بالانتباه أكثر عند تربيع المعاملات العددية وحساب ضعف الجداء.';
+      } else {
+        diagBox.className = 'rounded-xl p-2.5 border bg-rose-50/70 border-rose-200 text-rose-950 my-1 flex-1 flex flex-col justify-center';
+        diagTitle.innerHTML = '<span>📌</span> <span>تقدير متوسط: يحتاج إلى دعم وتدريب إضافي</span>';
+        diagText.textContent = 'أعد التدرب على الوحدة 1 (بناء النشر) لترسيخ الحدود الثلاثة قبل إعادة التقويم الشامل.';
+      }
+      const errorAdvice = [];
+      if (state.errors.forgotCoeffSquare > 0) errorAdvice.push(`• <strong>تربيع المعاملات (${state.errors.forgotCoeffSquare} مرات):</strong> تذكّر أن <span class="math-ltr">(3x)² = 9x²</span> وليس <span class="math-ltr">3x²</span>.`);
+      if (state.errors.forgotDoubleProduct > 0) errorAdvice.push(`• <strong>ضعف الجداء (${state.errors.forgotDoubleProduct} مرات):</strong> لا تنسَ الضرب في 2 عند حساب <span class="math-ltr">2ab</span>.`);
+      if (state.errors.forgotMiddleTerm > 0) errorAdvice.push(`• <strong>الحد الأوسط (${state.errors.forgotMiddleTerm} مرات):</strong> مربع مجموع ينتج عنه 3 حدود دائماً.`);
+      if (state.errors.mentalCalcError > 0) errorAdvice.push(`• <strong>الحساب الذهني (${state.errors.mentalCalcError} مرات):</strong> راجع جمع المئات والعشرات عند تفكيك الأعداد.`);
+      if (errorAdvice.length === 0) errList.innerHTML = '<p class="font-bold text-emerald-700">✨ سجل نظيف: لم يتم رصد أي خطأ منهجي متكرر.</p>';
+      else errorAdvice.forEach(item => { const p = document.createElement('p'); p.innerHTML = item; errList.appendChild(p); });
+    }
+    function getDiagnosisSummaryText() {
+      const notes = [];
+      if (state.errors.forgotCoeffSquare > 0) notes.push(`تربيع المعاملات (${state.errors.forgotCoeffSquare})`);
+      if (state.errors.forgotDoubleProduct > 0) notes.push(`ضعف الجداء 2ab (${state.errors.forgotDoubleProduct})`);
+      if (state.errors.forgotMiddleTerm > 0) notes.push(`نسيان الحد الأوسط (${state.errors.forgotMiddleTerm})`);
+      if (state.errors.mentalCalcError > 0) notes.push(`الحساب الذهني (${state.errors.mentalCalcError})`);
+      return notes.length > 0 ? notes.join('، ') : 'تحكم ممتاز بدون أخطاء متكررة';
+    }
+    function buildTeacherReportText() {
+      const name = document.getElementById('modal-student-name').value.trim() || state.studentName || 'تلميذ(ة)';
+      const cls = document.getElementById('modal-student-class').value.trim() || state.studentClass || 'غير محدد';
+      state.studentName = name; state.studentClass = cls;
+      const grade = document.getElementById('rep-grade').textContent, pts = document.getElementById('rep-points').textContent;
+      const u1 = document.getElementById('rep-u1-score').textContent, u2 = document.getElementById('rep-u2-score').textContent, u3 = document.getElementById('rep-u3-score').textContent;
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      return [
+        "السلام عليكم أستاذة سماعلي،",
+        "📋 بطاقة تقويم درس المتطابقة الشهيرة: مربع مجموع (a + b)²",
+        `• التلميذ(ة): ${name}`,
+        `• القسم: ${cls}`,
+        `• العلامة النهائية: ${grade} / 20 (النقاط: ${pts})`,
+        `• التفصيل: بناء النشر (${u1}) | الحساب الذهني (${u2}) | التقويم (${u3})`,
+        `• التشخيص: ${getDiagnosisSummaryText()}`,
+        `• التاريخ: ${dateStr}`
+      ].join('\n');
+    }
+    function openSendToTeacherModal() {
+      document.getElementById('modal-student-name').value = state.studentName;
+      document.getElementById('modal-student-class').value = state.studentClass;
+      document.getElementById('teacher-whatsapp-input').value = state.teacherWhatsApp;
+      document.getElementById('teacher-email-input').value = state.teacherEmail;
+      updateReportPreview(); document.getElementById('send-teacher-modal').classList.remove('hidden');
+    }
+    function closeSendToTeacherModal() { document.getElementById('send-teacher-modal').classList.add('hidden'); }
+    function updateReportPreview() {
+      document.getElementById('modal-report-preview').value = buildTeacherReportText();
+      document.getElementById('rep-name').textContent = state.studentName;
+      document.getElementById('rep-class-badge').textContent = state.studentClass ? `(${state.studentClass})` : '';
+    }
+    function saveTeacherContact() { state.teacherWhatsApp = document.getElementById('teacher-whatsapp-input').value.trim(); state.teacherEmail = document.getElementById('teacher-email-input').value.trim(); }
+    function sendViaWhatsApp() {
+      const text = encodeURIComponent(buildTeacherReportText());
+      const cleanPhone = state.teacherWhatsApp.replace(/[^0-9]/g, '');
+      window.open(cleanPhone ? `https://wa.me/${cleanPhone}?text=${text}` : `https://wa.me/?text=${text}`, '_blank');
+    }
+    function sendViaEmail() {
+      const subject = encodeURIComponent(`نتيجة تقويم المتطابقة الشهيرة - ${state.studentName} (${state.studentClass || '4 متوسط'})`);
+      const body = encodeURIComponent(buildTeacherReportText());
+      window.location.href = `mailto:${state.teacherEmail || ''}?subject=${subject}&body=${body}`;
+    }
+    function copyReportFromModal() {
+      const text = buildTeacherReportText();
+      navigator.clipboard.writeText(text).then(() => showToast('📋 تم نسخ التقرير! الصقه وأرسله للأستاذة سماعلي.')).catch(() => {
+        const ta = document.getElementById('modal-report-preview'); ta.select(); document.execCommand('copy'); showToast('📋 تم نسخ التقرير!');
+      });
+    }
+    function restartAll() {
+      state.score = 0; state.streak = 0; state.u1CorrectCount = 0; state.u2CorrectCount = 0; state.u3CorrectCount = 0;
+      state.errors = { forgotCoeffSquare: 0, forgotDoubleProduct: 0, forgotMiddleTerm: 0, mentalCalcError: 0 };
+      startFullJourney();
+    }
+  </script>
+</body>
+</html>
